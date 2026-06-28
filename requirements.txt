@@ -3,9 +3,9 @@ coverage==7.14.2
 django-cors-headers==4.9.0
 Django==6.0.6
 djangorestframework==3.17.1
-gunicorn==22.0.0
+gunicorn==23.0.0
 psycopg2-binary==2.9.12
 python-decouple==3.8
 sqlparse==0.5.5
 tzdata==2026.2
-whitenoise==6.9.0
+whitenoise==6.8.2
