@@ -1,224 +1,157 @@
 from django.core.management.base import BaseCommand
 from apps.products.models import Product
 
+
 PRODUCTS = [
-    # ── MAKIS ──────────────────────────────────────────────────────────────
     {
-        'sku': 'MAK-001', 'name': 'Acevichado Maki',
-        'description': 'Roll de langostino empanizado y palta, cubierto con láminas frescas de pescado blanco',
-        'unit_price': '20.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/xL89gzB5ez2PA2MAz-300-x.webp',
+        'name': 'Sashimi Salmón',
+        'description': 'Finas láminas de salmón fresco premium servidas con wasabi y jengibre encurtido.',
+        'sku': 'SASH-SAL-01',
+        'unit_price': '18.90',
+        'stock': 50,
         'is_featured': True,
+        'ingredients': ['salmón', 'wasabi', 'jengibre encurtido', 'salsa de soya'],
+        'image_url': 'https://images.unsplash.com/photo-1534482421-64566f976cfa?w=500',
     },
     {
-        'sku': 'MAK-002', 'name': 'California Maki',
-        'description': 'Roll relleno de langostino blanqueado, queso crema y palta',
-        'unit_price': '25.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/uzTynC2gG7dY3GfGm-300-x.webp',
+        'name': 'Sashimi Atún',
+        'description': 'Láminas de atún rojo seleccionado, suave y de sabor intenso.',
+        'sku': 'SASH-ATU-02',
+        'unit_price': '20.50',
+        'stock': 40,
         'is_featured': True,
+        'ingredients': ['atún rojo', 'wasabi', 'jengibre encurtido', 'salsa de soya'],
+        'image_url': 'https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=500',
     },
     {
-        'sku': 'MAK-003', 'name': 'Philadelphia Maki',
-        'description': 'Roll relleno de trucha y queso crema, cubierto de ajonjolí blanco',
-        'unit_price': '25.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/s8YGoc2ehe2Yuupak-300-x.webp',
+        'name': 'Dragon Roll',
+        'description': 'Roll cubierto con aguacate en forma de dragón, relleno de camarón tempura y pepino.',
+        'sku': 'ROLL-DRA-03',
+        'unit_price': '16.50',
+        'stock': 60,
         'is_featured': True,
+        'ingredients': ['camarón tempura', 'pepino', 'aguacate', 'arroz de sushi', 'alga nori'],
+        'image_url': 'https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=500',
     },
     {
-        'sku': 'MAK-004', 'name': 'Furai Maki',
-        'description': 'Roll empanizado al panko y frito, relleno de queso crema, palta y trucha',
-        'unit_price': '25.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/bNcuKaRawnENBGCYm-300-x.webp',
+        'name': 'Philadelphia Roll',
+        'description': 'Clásico roll con salmón, queso crema y pepino, sin alga por fuera.',
+        'sku': 'ROLL-PHI-04',
+        'unit_price': '14.90',
+        'stock': 70,
+        'is_featured': False,
+        'ingredients': ['salmón', 'queso crema', 'pepino', 'arroz de sushi'],
+        'image_url': 'https://images.unsplash.com/photo-1617196034099-5ee8d7d52ae8?w=500',
+    },
+    {
+        'name': 'Spicy Tuna Roll',
+        'description': 'Roll picante de atún con salsa sriracha, pepino y cebollín.',
+        'sku': 'ROLL-SPI-05',
+        'unit_price': '15.50',
+        'stock': 55,
+        'is_featured': False,
+        'ingredients': ['atún', 'sriracha', 'pepino', 'cebollín', 'arroz de sushi', 'alga nori'],
+        'image_url': 'https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=500',
+    },
+    {
+        'name': 'Ramen Tonkotsu',
+        'description': 'Caldo cremoso de hueso de cerdo con fideos ramen, chashu, huevo marinado y nori.',
+        'sku': 'RAME-TON-06',
+        'unit_price': '17.90',
+        'stock': 35,
         'is_featured': True,
+        'ingredients': ['caldo tonkotsu', 'fideos ramen', 'chashu', 'huevo marinado', 'nori', 'cebollín', 'bambú'],
+        'image_url': 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=500',
     },
     {
-        'sku': 'MAK-005', 'name': 'Inka Maki',
-        'description': 'Roll relleno de trucha salmonada y palta fresca, cubierto con ajonjolí mixto',
-        'unit_price': '25.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/CgmqfE9HZdSHcHbzx-300-x.webp',
+        'name': 'Gyoza',
+        'description': 'Empanadillas japonesas rellenas de cerdo y verduras, a la plancha con salsa ponzu.',
+        'sku': 'GYOZ-CER-07',
+        'unit_price': '10.50',
+        'stock': 80,
+        'is_featured': False,
+        'ingredients': ['cerdo molido', 'repollo', 'jengibre', 'ajo', 'salsa ponzu'],
+        'image_url': 'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=500',
     },
     {
-        'sku': 'MAK-006', 'name': 'Passion Maki',
-        'description': 'Roll relleno de ebi furai y palta, cubierto con trucha flameada',
-        'unit_price': '25.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/7gSnbZrqtdSwAu2vw-300-x.webp',
+        'name': 'Edamame',
+        'description': 'Vainas de soya verde al vapor con sal marina. Aperitivo clásico japonés.',
+        'sku': 'EDAM-SOY-08',
+        'unit_price': '6.90',
+        'stock': 100,
+        'is_featured': False,
+        'ingredients': ['soya verde', 'sal marina'],
+        'image_url': 'https://images.unsplash.com/photo-1535140728325-a4d3707eee61?w=500',
     },
     {
-        'sku': 'MAK-007', 'name': 'Tuna Crispy',
-        'description': 'Roll relleno de queso crema con pescado dulce deshidratado y palta',
-        'unit_price': '25.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/dQWv63MGBGJLvPjHu-300-x.webp',
-    },
-    {
-        'sku': 'MAK-008', 'name': 'Ceviche Maki',
-        'description': 'Roll relleno de pescado marinado en jugo de ceviche y langostino empanizado',
-        'unit_price': '25.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/kbtnawrmFMJEHLdM2-300-x.webp',
-    },
-    {
-        'sku': 'MAK-009', 'name': 'Tartar Maki',
-        'description': 'Roll empanizado y frito con langostinos y palta, coronado con tartar de trucha',
-        'unit_price': '25.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/9cr466rvmcbsybQQy-300-x.webp',
-    },
-    {
-        'sku': 'MAK-010', 'name': 'Doragon Maki',
-        'description': 'Roll cubierto con quinua tostada, topping de ebi furai con salsa acevichada',
-        'unit_price': '25.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/tvLFm9twaShTzvaTp-300-x.webp',
+        'name': 'Tempura de Camarón',
+        'description': 'Camarones en tempura crujiente servidos con salsa tentsuyu.',
+        'sku': 'TEMP-CAM-09',
+        'unit_price': '19.90',
+        'stock': 45,
         'is_featured': True,
+        'ingredients': ['camarón', 'masa tempura', 'salsa tentsuyu', 'rábano rallado'],
+        'image_url': 'https://images.unsplash.com/photo-1617196034262-fd184f2d7df4?w=500',
     },
     {
-        'sku': 'MAK-011', 'name': 'Lomo Saltado Maki',
-        'description': 'Roll relleno de bastones de carne en tempura y papas al hilo',
-        'unit_price': '25.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/Y8qrC3SWdfGK3WBhj-300-x.webp',
+        'name': 'Miso Soup',
+        'description': 'Sopa tradicional de miso con tofu, alga wakame y cebollín.',
+        'sku': 'SOUP-MIS-10',
+        'unit_price': '5.90',
+        'stock': 120,
+        'is_featured': False,
+        'ingredients': ['pasta miso', 'tofu', 'alga wakame', 'cebollín'],
+        'image_url': 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=500',
     },
     {
-        'sku': 'MAK-012', 'name': 'Yakuza Maki',
-        'description': 'Roll relleno de langostino empanizado y queso crema, cubierto de palta y ajonjolí',
-        'unit_price': '25.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/Bum5uJHb7usPFYCoz-300-x.webp',
+        'name': 'California Roll',
+        'description': 'Roll invertido con cangrejo, aguacate y pepino, cubierto de semillas de sésamo.',
+        'sku': 'ROLL-CAL-11',
+        'unit_price': '13.90',
+        'stock': 75,
+        'is_featured': False,
+        'ingredients': ['cangrejo', 'aguacate', 'pepino', 'arroz de sushi', 'sésamo'],
+        'image_url': 'https://images.unsplash.com/photo-1602827114285-2f1269f2c4ed?w=500',
     },
-
-    # ── POKE BOWLS ─────────────────────────────────────────────────────────
     {
-        'sku': 'POK-001', 'name': 'Poke de Trucha',
-        'description': 'Base de arroz sushi, salsa de ostión, col morada, zanahoria, pepino, palta y trucha fresca',
-        'unit_price': '27.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/Ydrv4AgzHxpmJkJ4n-300-x.webp',
+        'name': 'Nigiri Mix',
+        'description': 'Selección de 8 piezas de nigiri: salmón, atún, camarón y pez blanco.',
+        'sku': 'NIGI-MIX-12',
+        'unit_price': '22.90',
+        'stock': 30,
         'is_featured': True,
+        'ingredients': ['salmón', 'atún', 'camarón', 'pez blanco', 'arroz de sushi', 'wasabi'],
+        'image_url': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500',
     },
     {
-        'sku': 'POK-002', 'name': 'Poke Salmón Fresco',
-        'description': 'Base de arroz sushi, salsa de ostión, col morada, zanahoria, pepino, palta y salmón fresco',
-        'unit_price': '29.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/Z7NvgrHgp7gJNr9Gv-300-x.webp',
+        'name': 'Yakitori',
+        'description': 'Brochetas de pollo a la parrilla glaseadas con salsa tare dulce.',
+        'sku': 'YAKI-POL-13',
+        'unit_price': '12.90',
+        'stock': 60,
+        'is_featured': False,
+        'ingredients': ['pollo', 'salsa tare', 'cebolla de verdeo'],
+        'image_url': 'https://images.unsplash.com/photo-1604909052743-94e838986d24?w=500',
     },
     {
-        'sku': 'POK-003', 'name': 'Poke Ebi Furai',
-        'description': 'Base de arroz sushi, salsa de ostión, col morada, zanahoria, pepino, palta y langostinos empanizados',
-        'unit_price': '29.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/XMHRtBkDsPAPDBoRb-300-x.webp',
+        'name': 'Sake (Copa)',
+        'description': 'Sake japonés tradicional servido frío o caliente.',
+        'sku': 'BEBA-SAK-14',
+        'unit_price': '9.90',
+        'stock': 200,
+        'is_featured': False,
+        'ingredients': ['sake japonés'],
+        'image_url': 'https://images.unsplash.com/photo-1582337557373-a0e1d65b57cc?w=500',
     },
     {
-        'sku': 'POK-004', 'name': 'Poke Tartar de Trucha',
-        'description': 'Base de arroz sushi, salsa de ostión, col morada, zanahoria, pepino, palta y tartar de trucha',
-        'unit_price': '29.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/rdAaDdXgZ5guJXpWY-300-x.webp',
-    },
-
-    # ── POKE BOWLS adicionales ─────────────────────────────────────────────
-    {
-        'sku': 'POK-005', 'name': 'Poke Atún Fresco',
-        'description': 'Base de arroz sushi, salsa de ostión, col morada, zanahoria, pepino, palta y atún fresco',
-        'unit_price': '29.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/u6zbbYZ4AQ6Qo5cSR-300-x.webp',
-    },
-    {
-        'sku': 'POK-006', 'name': 'Poke Langostino Cocido',
-        'description': 'Base de arroz sushi, salsa de ostión, col morada, zanahoria, pepino, palta y langostinos blanqueados',
-        'unit_price': '29.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/KZKDGWGfzm4StG7vg-300-x.webp',
-    },
-    {
-        'sku': 'POK-007', 'name': 'Poke Pulpa Mix',
-        'description': 'Base de arroz sushi, salsa de ostión, col morada, zanahoria, pepino, palta y crema de cangrejo',
-        'unit_price': '29.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/8snqM7gF8PoDxkQfE-300-x.webp',
-    },
-    {
-        'sku': 'POK-008', 'name': 'Poke Sakana Furai',
-        'description': 'Base de arroz sushi, salsa de ostión, col morada, zanahoria, pepino, palta y bastones de pescado frito',
-        'unit_price': '29.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/v8dmAaWEzLeNjm3Mp-300-x.webp',
-    },
-
-    # ── ENTRADAS FRÍAS ─────────────────────────────────────────────────────
-    {
-        'sku': 'GUN-001', 'name': 'Gunkan Sushi de Kani',
-        'description': 'Arroz envuelto en nori, relleno de pulpa de cangrejo y salsa especial',
-        'unit_price': '15.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/FDeXRyReZnXLf4GDE-300-x.webp',
-    },
-    {
-        'sku': 'GUN-002', 'name': 'Gunkan Sushi de Langostinos',
-        'description': 'Arroz envuelto en nori, relleno de tartar de langostinos, palta y salsa especial',
-        'unit_price': '14.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/eEekaqAyZJuf2WnED-300-x.webp',
-    },
-    {
-        'sku': 'GUN-003', 'name': 'Gunkan Sushi de Trucha',
-        'description': 'Arroz envuelto en nori, relleno de trucha asalmonada, palta y salsa especial',
-        'unit_price': '14.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/3z7g7E5Njy8kqJDA3-300-x.webp',
-    },
-    {
-        'sku': 'ENT-004', 'name': 'Nigiri de Langostino',
-        'description': 'Bolita de arroz de sushi y corte fino de langostino cocido',
-        'unit_price': '7.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/wyhsyphRGJWBB6qfR-300-x.webp',
-    },
-    {
-        'sku': 'ENT-005', 'name': 'Nigiri de Salmón',
-        'description': 'Bolita de arroz de sushi y corte fino de salmón',
-        'unit_price': '9.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/Pjxm6JmLnar5Mambk-300-x.webp',
-    },
-    {
-        'sku': 'ENT-006', 'name': 'Nigiri de Trucha',
-        'description': 'Bolita de arroz de sushi y corte fino de trucha asalmonada',
-        'unit_price': '7.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/hC2FF253RSqhqagXf-300-x.webp',
-    },
-    {
-        'sku': 'ENT-007', 'name': 'Sashimi de Langostino',
-        'description': '4 cortes de langostino fresco con salsa shoyu, gari y wasabi',
-        'unit_price': '16.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/3t3PBvAArhzDpXSbm-300-x.webp',
-    },
-    {
-        'sku': 'ENT-008', 'name': 'Sashimi de Salmón',
-        'description': '4 cortes de salmón con salsa shoyu, gari y wasabi',
-        'unit_price': '20.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/zQCdD5uucfSJqA9LJ-300-x.webp',
-    },
-    {
-        'sku': 'ENT-009', 'name': 'Sashimi de Trucha',
-        'description': '4 cortes de trucha asalmonada con salsa shoyu, gari y wasabi',
-        'unit_price': '15.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/xwLmy5avoNrdCndrN-300-x.webp',
-    },
-
-    # ── ENTRADAS CALIENTES ─────────────────────────────────────────────────
-    {
-        'sku': 'CAL-001', 'name': 'Ebi Furai',
-        'description': 'Langostinos empanizados al panko, crujientes y dorados, acompañados de salsa especial',
-        'unit_price': '18.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/ptRvKkswp3tH3wJ2Z-300-x.webp',
-    },
-    {
-        'sku': 'CAL-002', 'name': 'Gyozas de Pescado',
-        'description': 'Empanaditas rellenas de pescado fresco y verduras, servidas con salsa oriental',
-        'unit_price': '14.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/x79Gyr9BZacaWpqr7-300-x.webp',
-    },
-
-    # ── TEMAKIS ────────────────────────────────────────────────────────────
-    {
-        'sku': 'TEM-001', 'name': 'Temaki Acevichado',
-        'description': 'Cono relleno de ebi furai crujiente, palta y láminas de pescado',
-        'unit_price': '16.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/xnMvpsnGJuBKMuQCE-300-x.webp',
-    },
-    {
-        'sku': 'TEM-002', 'name': 'Temaki California',
-        'description': 'Cono relleno de queso crema, palta y langostino blanqueado',
-        'unit_price': '16.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/rrgmg6W2Z33scAEoM-300-x.webp',
-    },
-
-    # ── MESHI ──────────────────────────────────────────────────────────────
-    {
-        'sku': 'MES-001', 'name': 'Yakimeshi Mixto',
-        'description': 'Arroz frito con verduras, pecanas, pollo, langostino y cerdo',
-        'unit_price': '20.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/S4ngmpfhLHcmpRNDE-300-x.webp',
-    },
-    {
-        'sku': 'MES-002', 'name': 'Nekimeshi de Pollo',
-        'description': 'Arroz dulce de sushi salteado con verduras, pecanas y pollo',
-        'unit_price': '18.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/uQnRCFm9cx3rv7SYN-300-x.webp',
-    },
-
-    # ── SOPAS ──────────────────────────────────────────────────────────────
-    {
-        'sku': 'SOP-001', 'name': 'Chicken Ramen',
-        'description': 'Caldo umami, fideo ramen, pollo, huevo ajitsuke, cebollines y ajonjolí',
-        'unit_price': '20.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/DmrFdykrKLkLrAnuw-300-x.webp',
-    },
-    {
-        'sku': 'SOP-002', 'name': 'Ebi Ramen',
-        'description': 'Caldo de langostinos con miso y ostión, fideos firmes, ebi furai crocante',
-        'unit_price': '20.00', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/Gofw75d9q7BgB87JD-300-x.webp',
-    },
-
-    # ── SÁNDWICH SUSHI ─────────────────────────────────────────────────────
-    {
-        'sku': 'SAN-001', 'name': 'Sándwich Sushi Acevichado',
-        'description': 'Sándwich frito relleno de tartar de pescado y langostinos en salsa acevichada',
-        'unit_price': '25.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/MaQmKdgQApLa4vXSG-300-x.webp',
-    },
-    {
-        'sku': 'SAN-002', 'name': 'Sándwich Sushi Tradicional',
-        'description': 'Sándwich relleno con queso crema, trucha, palta, gari y col morada',
-        'unit_price': '25.90', 'image_url': 'https://tofuu.getjusto.com/orioneat-local/resized2/TkkBRnzAc3q5EHahG-300-x.webp',
+        'name': 'Matcha Latte',
+        'description': 'Té verde matcha premium con leche vaporizada.',
+        'sku': 'BEBA-MAT-15',
+        'unit_price': '7.50',
+        'stock': 150,
+        'is_featured': False,
+        'ingredients': ['matcha premium', 'leche', 'azúcar'],
+        'image_url': 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=500',
     },
 ]
 
@@ -227,32 +160,13 @@ class Command(BaseCommand):
     help = 'Carga productos del menú en la base de datos'
 
     def handle(self, *args, **kwargs):
-        # limpia SKUs obsoletos del primer seed
-        deleted, _ = Product.objects.filter(sku__in=['ENT-001', 'ENT-002', 'ENT-003']).delete()
-        if deleted:
-            self.stdout.write(f'  Eliminados {deleted} productos con SKUs obsoletos')
-
         created = 0
         skipped = 0
         for data in PRODUCTS:
-            obj, was_created = Product.objects.get_or_create(
-                sku=data['sku'],
-                defaults={
-                    'name': data['name'],
-                    'description': data.get('description', ''),
-                    'unit_price': data['unit_price'],
-                    'image_url': data.get('image_url'),
-                    'stock': 50,
-                    'is_featured': data.get('is_featured', False),
-                    'ingredients': [],
-                },
-            )
-            if was_created:
+            _, is_new = Product.objects.get_or_create(sku=data['sku'], defaults=data)
+            if is_new:
                 created += 1
-                self.stdout.write(f'  + {obj.name}')
             else:
                 skipped += 1
 
-        self.stdout.write(self.style.SUCCESS(
-            f'\nListo: {created} creados, {skipped} ya existían.'
-        ))
+        self.stdout.write(self.style.SUCCESS(f'{created} productos creados, {skipped} ya existían.'))

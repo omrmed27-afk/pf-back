@@ -1,46 +1,50 @@
 from django.core.management.base import BaseCommand
-from apps.tables.models import Table
 from apps.warehouses.models import Warehouse
+from apps.tables.models import Table
 
 
 TABLES = [
-    # (number, capacity)
-    (1,  6),
-    (2,  6),
-    (3,  6),
-    (4,  6),
-    (5,  6),
-    (6,  6),
-    (7,  6),
-    (8,  6),
-    (9,  6),
-    (10, 6),
-    (11, 6),
-    (12, 6),
+    {'number': 1,  'capacity': 2},
+    {'number': 2,  'capacity': 2},
+    {'number': 3,  'capacity': 4},
+    {'number': 4,  'capacity': 4},
+    {'number': 5,  'capacity': 2},
+    {'number': 6,  'capacity': 4},
+    {'number': 7,  'capacity': 2},
+    {'number': 8,  'capacity': 4},
+    {'number': 9,  'capacity': 4},
+    {'number': 10, 'capacity': 4},
+    {'number': 11, 'capacity': 6},
+    {'number': 12, 'capacity': 6},
 ]
 
 
 class Command(BaseCommand):
-    help = 'Crea las 12 mesas del restaurante en el primer local registrado'
+    help = 'Carga las mesas del restaurante en la base de datos'
 
-    def handle(self, *args, **options):
-        warehouse = Warehouse.objects.first()
-        if not warehouse:
-            self.stdout.write(self.style.ERROR('No hay ningún local registrado. Creá uno primero en el admin.'))
-            return
+    def handle(self, *args, **kwargs):
+        warehouse, _ = Warehouse.objects.get_or_create(
+            name='Dragon Rojo - Local Principal',
+            defaults={
+                'address': 'Av. Japón 123',
+                'city': 'Lima',
+                'country': 'Perú',
+                'capacity': 48,
+                'floors': 1,
+            }
+        )
 
-        self.stdout.write(f'Local: {warehouse.name}')
         created = 0
-        for number, capacity in TABLES:
-            table, is_new = Table.objects.get_or_create(
+        skipped = 0
+        for data in TABLES:
+            _, is_new = Table.objects.get_or_create(
                 warehouse=warehouse,
-                number=number,
-                defaults={'capacity': capacity, 'status': Table.AVAILABLE},
+                number=data['number'],
+                defaults={'capacity': data['capacity']},
             )
             if is_new:
                 created += 1
-                self.stdout.write(f'  + Mesa {number} creada (capacidad {capacity})')
             else:
-                self.stdout.write(f'  — Mesa {number} ya existe')
+                skipped += 1
 
-        self.stdout.write(self.style.SUCCESS(f'\n{created} mesas creadas. Total: {Table.objects.filter(warehouse=warehouse).count()} mesas en {warehouse.name}.'))
+        self.stdout.write(self.style.SUCCESS(f'{created} mesas creadas, {skipped} ya existían.'))
