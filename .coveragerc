@@ -1,0 +1,15 @@
+[run]
+source = apps
+omit =
+    */migrations/*
+    */tests/*
+    */tests.py
+    */__init__.py
+
+[report]
+fail_under = 80
+show_missing = true
+
+[html]
+directory = htmlcov
+title = Restaurante Oriental - Reporte de Cobertura
