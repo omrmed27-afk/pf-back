@@ -38,7 +38,8 @@ else:
 
 CORS_ALLOWED_ORIGINS = config(
     'CORS_ALLOWED_ORIGINS',
-    cast=lambda v: [s.strip() for s in v.split(',')]
+    default='',
+    cast=lambda v: [s.strip() for s in v.split(',') if s.strip()]
 )
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
